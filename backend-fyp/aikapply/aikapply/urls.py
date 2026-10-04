@@ -15,9 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf.urls.static import static
 from django.conf import settings
+from django.http import FileResponse, Http404
+from django.views.static import serve as serve_file
+
+
+def frontend_app(request):
+    """Serve the built React app's index.html; React Router handles the page."""
+    index = settings.FRONTEND_DIST / "index.html"
+    if not index.is_file():
+        raise Http404("Frontend build not found")
+    return FileResponse(open(index, "rb"), content_type="text/html")
 
 
 urlpatterns = [
@@ -35,3 +45,18 @@ urlpatterns = [
     path("demo-portals/", include("dummy_university.urls")),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if not settings.DEBUG:
+    # static() only works in DEBUG; serve uploads (photos, screenshots) in production too
+    urlpatterns += [
+        re_path(r"^media/(?P<path>.*)$", serve_file, {"document_root": settings.MEDIA_ROOT}),
+    ]
+
+# Every other path is a React page (/, /login, /dashboard, ...) when the built app is present
+if settings.FRONTEND_DIST.is_dir():
+    urlpatterns += [
+        re_path(
+            r"^(?!admin/|auth/|student/|ai_mapping/|automation_engine/|api/|api_tools/|demo-portals/|media/|static/).*$",
+            frontend_app,
+        ),
+    ]

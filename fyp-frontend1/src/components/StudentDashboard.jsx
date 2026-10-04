@@ -1700,8 +1700,9 @@ import { getSession, logout, updateSession } from "../utils/authStore";
 import api from "../api/axios";
 import Chatbot from "./Chatbot";
 import UpcomingDeadlines from "./deadline";
+import { API_BASE } from "../config";
 
-const API = "http://127.0.0.1:8000/api/deadlines";
+const API = `${API_BASE}/api/deadlines`;
 
 // ── tiny helpers ─────────────────────────────────────────────────────────────
 
@@ -1968,7 +1969,7 @@ export default function StudentDashboard() {
         : a
     ));
     try {
-      const res  = await fetch("http://127.0.0.1:8000/api/automation-pipeline/apply/", {
+      const res  = await fetch(`${API_BASE}/api/automation-pipeline/apply/`, {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -2119,7 +2120,7 @@ export default function StudentDashboard() {
               {uploadErr && (
                 <p className="mt-2 px-2 text-[11px] text-red-400">⚠ {uploadErr}</p>
               )}
-              <a href="http://127.0.0.1:8000/admin/deadline/university/" target="_blank" rel="noreferrer"
+              <a href={`${API_BASE}/admin/deadline/university/`} target="_blank" rel="noreferrer"
                 className="block mt-2 px-5 py-3 rounded-xl text-white/60 hover:bg-white/10 hover:text-white transition-all text-sm border border-white/5 hover:border-white/20">
                 ✏️ Edit / delete universities
               </a>
@@ -2346,7 +2347,7 @@ export default function StudentDashboard() {
                             if (!url) return null;
                             return url.startsWith("http")
                               ? url
-                              : `http://127.0.0.1:8000${url}`;
+                              : `${API_BASE}${url}`;
                           }).filter(Boolean);
 
                           return (

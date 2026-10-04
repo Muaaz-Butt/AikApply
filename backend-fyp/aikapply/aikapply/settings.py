@@ -28,9 +28,14 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Local development: DEBUG on by default. The Docker deployment sets DJANGO_DEBUG=0.
+DEBUG = os.getenv('DJANGO_DEBUG', '1') == '1'
 
-ALLOWED_HOSTS = []
+def _env_list(name, default=""):
+    return [v.strip() for v in os.getenv(name, default).split(",") if v.strip()]
+
+# e.g. DJANGO_ALLOWED_HOSTS="muaaz-butt-aikapply.hf.space,localhost"
+ALLOWED_HOSTS = _env_list('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1')
 
 
 AUTHENTICATION_BACKENDS = [
@@ -56,7 +61,16 @@ CSRF_TRUSTED_ORIGINS = ["http://localhost:5173",
                         "http://127.0.0.1:3000/",
                         "http://127.0.0.1:4000/",
                         "http://127.0.0.1:4000/uet"
-                        ]
+                        ] + _env_list('DJANGO_CSRF_TRUSTED_ORIGINS')
+
+if not DEBUG:
+    # Production is served over HTTPS behind a proxy, and Hugging Face shows the app
+    # inside an iframe on huggingface.co, so cookies must be Secure + SameSite=None.
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SAMESITE = 'None'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -82,6 +96,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # serves static files + the built React app
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -89,6 +104,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if not DEBUG:
+    # Allow the app to be embedded in its Hugging Face Space page
+    MIDDLEWARE.remove('django.middleware.clickjacking.XFrameOptionsMiddleware')
 
 ROOT_URLCONF = 'aikapply.urls'
 
@@ -120,6 +139,14 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Production uses Postgres (e.g. Neon) from DATABASE_URL. Local development keeps
+# SQLite even if DATABASE_URL is in .env, so local testing never touches real data.
+if not DEBUG and os.getenv('DATABASE_URL'):
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.parse(
+        os.environ['DATABASE_URL'], conn_max_age=600, ssl_require=True,
+    )
 
 
 # Password validation
@@ -157,6 +184,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Built React app (fyp-frontend1/dist), copied here by the Dockerfile.
+# WhiteNoise serves its files (/assets/..., favicon) from the site root.
+FRONTEND_DIST = Path(os.getenv('FRONTEND_DIST', BASE_DIR / 'frontend_dist'))
+if FRONTEND_DIST.is_dir():
+    WHITENOISE_ROOT = FRONTEND_DIST
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -180,7 +214,6 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-load_dotenv()
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
 # Credentials auto-apply uses on portals that need a login.

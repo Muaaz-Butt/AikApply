@@ -1,0 +1,12 @@
+**/.git
+**/.DS_Store
+**/__pycache__
+**/*.pyc
+**/.env
+backend-fyp/.old-git-aikapply-backup
+backend-fyp/aikapply/venv
+backend-fyp/aikapply/db.sqlite3
+backend-fyp/aikapply/media
+backend-fyp/aikapply/staticfiles
+fyp-frontend1/node_modules
+fyp-frontend1/dist

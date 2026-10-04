@@ -8431,6 +8431,35 @@ MAX_FORM_STEPS      = 15   # raised from 10
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Browser setup (local: visible Chrome; server: headless Chromium via env vars)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _new_chrome(headless: bool):
+    """
+    AUTOMATION_HEADLESS=1   force headless (servers have no screen)
+    CHROME_BIN              browser binary, e.g. /usr/bin/chromium in Docker
+    CHROMEDRIVER_PATH       matching driver, e.g. /usr/bin/chromedriver
+    """
+    from selenium.webdriver.chrome.service import Service
+
+    headless = headless or os.getenv("AUTOMATION_HEADLESS") == "1"
+    options = Options()
+    if headless:
+        options.add_argument("--headless=new")
+        options.add_argument("--window-size=1920,1080")
+    else:
+        options.add_argument("--start-maximized")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    if os.getenv("CHROME_BIN"):
+        options.binary_location = os.environ["CHROME_BIN"]
+
+    driver_path = os.getenv("CHROMEDRIVER_PATH")
+    service = Service(driver_path) if driver_path else Service()
+    return webdriver.Chrome(service=service, options=options)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Smart button finders
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -8892,17 +8921,11 @@ class AIService:
         FIX: DOM change detection now uses HTML signature hashing,
              not URL or field count. This correctly handles React SPAs.
         """
-        options = Options()
-        options.add_argument("--headless=new")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--window-size=1920,1080")
-
         driver = None
         pages  = []
 
         try:
-            driver = webdriver.Chrome(options=options)
+            driver = _new_chrome(headless=True)
             driver.get(url)
             _wait_for_react_hydration(driver, timeout=15)
 
@@ -9557,10 +9580,7 @@ class AutomationService:
         if not url:
             return {"status":"failed","message":"No URL provided","screenshots":[]}
 
-        options = Options()
-        options.add_argument("--start-maximized")
-
-        driver = webdriver.Chrome(options=options)
+        driver = _new_chrome(headless=False)  # visible locally, headless on servers
         driver.get(url)
         _wait_for_react_hydration(driver, timeout=15)
 

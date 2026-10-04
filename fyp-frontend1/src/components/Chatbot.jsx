@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Send, User, Bot, Loader2, Copy, Check } from "lucide-react";
 import useProfilePhoto from "../utils/useProfilePhoto";
+import { API_BASE } from "../config";
 
 export default function Chatbot() {
   const userPhoto = useProfilePhoto();
@@ -36,7 +37,7 @@ export default function Chatbot() {
   useEffect(() => {
     // Fetch History using backend endpoint
     if (sessionId) {
-      axios.get(`http://localhost:8000/api_tools/chat/?session_id=${sessionId}`)
+      axios.get(`${API_BASE}/api_tools/chat/?session_id=${sessionId}`)
         .then(res => {
            if (res.data.messages && res.data.messages.length > 0) {
              const history = res.data.messages.map(m => ({
@@ -85,7 +86,7 @@ export default function Chatbot() {
     setIsTyping(true);
 
     try {
-      const response = await axios.post("http://localhost:8000/api_tools/chat/", {
+      const response = await axios.post(`${API_BASE}/api_tools/chat/`, {
         session_id: sessionId,
         message: userMessage.text
       });

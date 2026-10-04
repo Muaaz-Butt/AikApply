@@ -58,3 +58,16 @@ The backend serves four demo university portals at `http://127.0.0.1:8000/demo-p
 `universities_deadlines.xlsx` lists these portals. Sign in as an admin and upload it from the dashboard (or it is imported automatically on first start). Submissions received by the demo portals are listed at `http://127.0.0.1:8000/demo-portals/submissions/`.
 
 > The Gemini free tier allows about 5 requests per minute, shared by the recommender, chatbot and auto-apply.
+
+## Deployment (Hugging Face Spaces + Neon)
+
+The `Dockerfile` builds one container: the React app, the Django API (gunicorn + WhiteNoise) and headless Chromium for auto-apply. Data is stored in Postgres via `DATABASE_URL`.
+
+1. Add to `backend-fyp/aikapply/.env`: `HF_TOKEN` (Hugging Face write token) and `DATABASE_URL` (e.g. a free Neon Postgres connection string).
+2. Commit your changes, then run:
+
+   ```bash
+   backend-fyp/aikapply/venv/bin/python deploy/deploy_hf.py
+   ```
+
+The script creates the Space, sets its secrets and uploads the committed code; Hugging Face builds and starts the container. Uploaded files (photos, documents, screenshots) are not persistent on the free tier.
