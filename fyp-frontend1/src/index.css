@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-darkPurple text-white font-poppins;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Avoid horizontal scrollbars on small screens */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body, html {
+  overflow-x: hidden;
+}

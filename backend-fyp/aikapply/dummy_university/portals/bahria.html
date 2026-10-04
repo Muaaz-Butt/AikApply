@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bahria University — e-Admission (Demo)</title>
+    <style>/*PORTAL_CSS*/</style>
+</head>
+<body>
+<div class="form-container">
+    <span class="portal-badge">Demo portal · Unusual field names</span>
+    <h2>Bahria University — e-Admission Form</h2>
+    <p class="muted">This portal uses its own field names and labels, so the AI has to work out what each field means.</p>
+
+    <form id="bahriaForm" method="post" action="submit/" enctype="multipart/form-data">
+        <h3>Candidate Particulars</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="cand_nm">Name of Candidate (in block letters)</label>
+                <input type="text" id="cand_nm" name="cand_nm">
+            </div>
+            <div class="form-group">
+                <label for="nic_bform">NIC / B-Form No.</label>
+                <input type="text" id="nic_bform" name="nic_bform">
+            </div>
+            <div class="form-group">
+                <label for="d_o_b">D.O.B</label>
+                <input type="date" id="d_o_b" name="d_o_b">
+            </div>
+            <div class="form-group">
+                <label for="sex">Sex</label>
+                <select id="sex" name="sex">
+                    <option value="">--</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="faith">Faith</label>
+                <input type="text" id="faith" name="faith">
+            </div>
+            <div class="form-group">
+                <label for="nat">Citizenship</label>
+                <input type="text" id="nat" name="nat">
+            </div>
+        </div>
+
+        <h3>Correspondence</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="contact_no">Contact No. (Self)</label>
+                <input type="tel" id="contact_no" name="contact_no">
+            </div>
+            <div class="form-group">
+                <label for="e_mail">E-mail</label>
+                <input type="email" id="e_mail" name="e_mail">
+            </div>
+            <div class="form-group">
+                <label for="res_city">City</label>
+                <input type="text" id="res_city" name="res_city">
+            </div>
+            <div class="form-group">
+                <label for="res_prov">Province / Territory</label>
+                <input type="text" id="res_prov" name="res_prov">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="addr_line">Residential Address</label>
+            <textarea id="addr_line" name="addr_line" rows="2"></textarea>
+        </div>
+
+        <h3>Parent Particulars</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="f_nm">Father's / Husband's Name</label>
+                <input type="text" id="f_nm" name="f_nm">
+            </div>
+            <div class="form-group">
+                <label for="f_nic">Father's NIC</label>
+                <input type="text" id="f_nic" name="f_nic">
+            </div>
+            <div class="form-group">
+                <label for="f_cell">Father's Cell</label>
+                <input type="tel" id="f_cell" name="f_cell">
+            </div>
+            <div class="form-group">
+                <label for="m_nm">Mother's Name</label>
+                <input type="text" id="m_nm" name="m_nm">
+            </div>
+        </div>
+
+        <h3>Education</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="ssc_obt">SSC Marks Obtained</label>
+                <input type="number" id="ssc_obt" name="ssc_obt">
+            </div>
+            <div class="form-group">
+                <label for="ssc_tot">SSC Total Marks</label>
+                <input type="number" id="ssc_tot" name="ssc_tot">
+            </div>
+            <div class="form-group">
+                <label for="hssc_obt">HSSC-I Marks Obtained</label>
+                <input type="number" id="hssc_obt" name="hssc_obt">
+            </div>
+            <div class="form-group">
+                <label for="hssc_brd">HSSC Board</label>
+                <input type="text" id="hssc_brd" name="hssc_brd">
+            </div>
+        </div>
+
+        <h3>Program Applied For</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="prog_pref_a">Preference A</label>
+                <select id="prog_pref_a" name="prog_pref_a">
+                    <option value="">--</option>
+                    <option>Computer Science</option>
+                    <option>Software Engineering</option>
+                    <option>Data Science</option>
+                    <option>Artificial Intelligence</option>
+                    <option>Information Technology</option>
+                    <option>Electrical Engineering</option>
+                    <option>Business Administration</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="prog_pref_b">Preference B</label>
+                <select id="prog_pref_b" name="prog_pref_b">
+                    <option value="">--</option>
+                    <option>Computer Science</option>
+                    <option>Software Engineering</option>
+                    <option>Data Science</option>
+                    <option>Artificial Intelligence</option>
+                    <option>Information Technology</option>
+                    <option>Electrical Engineering</option>
+                    <option>Business Administration</option>
+                </select>
+            </div>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="needs_boarding" name="needs_boarding">
+            <label for="needs_boarding">Boarding (hostel) required</label>
+        </div>
+
+        <h3>Attachments</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="att_pic">Candidate Picture</label>
+                <input type="file" id="att_pic" name="att_pic" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="att_dom">Domicile Certificate</label>
+                <input type="file" id="att_dom" name="att_dom">
+            </div>
+        </div>
+
+        <div class="btn-group end">
+            <button type="submit" id="submit_form_btn">Submit Application</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

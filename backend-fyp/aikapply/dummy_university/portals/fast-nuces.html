@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAST NUCES — Admission Portal (Demo)</title>
+    <style>/*PORTAL_CSS*/</style>
+</head>
+<body>
+<div class="form-container" id="app"></div>
+
+<script>
+// Demo credentials — must match PORTAL_EMAIL / PORTAL_PASSWORD in Django settings
+const DEMO_USERNAME = "student";
+const DEMO_PASSWORD = "au2024";
+
+const app = document.getElementById("app");
+
+function showLogin() {
+    app.innerHTML = `
+        <span class="portal-badge">Demo portal · Login required</span>
+        <h2>FAST NUCES — Applicant Login</h2>
+        <p class="muted">Sign in to your applicant account to continue your admission form.</p>
+        <div class="hint">Demo credentials — username: <b>${DEMO_USERNAME}</b> · password: <b>${DEMO_PASSWORD}</b></div>
+        <div class="form-group"><label for="username">Username</label><input type="text" id="username" name="username" autocomplete="off"></div>
+        <div class="form-group"><label for="password">Password</label><input type="password" id="password" name="password"></div>
+        <div class="error" id="login_error"></div>
+        <div class="btn-group end"><button type="button" id="login_btn">Log In</button></div>`;
+    document.getElementById("login_btn").onclick = () => {
+        const user = document.getElementById("username").value.trim();
+        const pass = document.getElementById("password").value;
+        if (user === DEMO_USERNAME && pass === DEMO_PASSWORD) {
+            showApplication(user);
+        } else {
+            document.getElementById("login_error").textContent = "Invalid username or password.";
+        }
+    };
+}
+
+function programOptions() {
+    return ["", "BS (CS) Computer Science", "BS (SE) Software Engineering", "BS (DS) Data Science",
+            "BS (AI) Artificial Intelligence", "BS (CY) Cyber Security", "BBA Business Analytics"]
+        .map(p => `<option value="${p}">${p || "Select program"}</option>`).join("");
+}
+
+function showApplication(user) {
+    app.innerHTML = `
+        <span class="portal-badge">Demo portal · Signed in as ${user}</span>
+        <h2>FAST NUCES — Admission Application</h2>
+        <p class="muted">Fill in your details exactly as they appear on your documents.</p>
+        <form id="fastForm" method="post" action="submit/" enctype="multipart/form-data">
+            <input type="hidden" name="portal_username" value="${user}">
+            <h3>Applicant</h3>
+            <div class="grid">
+                <div class="form-group"><label for="full_name">Full Name</label><input type="text" id="full_name" name="full_name"></div>
+                <div class="form-group"><label for="cnic_number">CNIC Number</label><input type="text" id="cnic_number" name="cnic_number"></div>
+                <div class="form-group"><label for="birth_date">Date of Birth</label><input type="date" id="birth_date" name="birth_date"></div>
+                <div class="form-group"><label for="email_address">Email</label><input type="email" id="email_address" name="email_address"></div>
+                <div class="form-group"><label for="cell_number">Cell Number</label><input type="tel" id="cell_number" name="cell_number"></div>
+                <div class="form-group"><label for="city_of_residence">City of Residence</label><input type="text" id="city_of_residence" name="city_of_residence"></div>
+            </div>
+            <h3>Guardian</h3>
+            <div class="grid">
+                <div class="form-group"><label for="guardian_name">Guardian Name</label><input type="text" id="guardian_name" name="guardian_name"></div>
+                <div class="form-group"><label for="guardian_contact">Guardian Mobile</label><input type="tel" id="guardian_contact" name="guardian_contact"></div>
+            </div>
+            <h3>Academics &amp; Program</h3>
+            <div class="grid">
+                <div class="form-group"><label for="ssc_marks">SSC (Matric) Marks Obtained</label><input type="number" id="ssc_marks" name="ssc_marks"></div>
+                <div class="form-group"><label for="hssc_part1_marks">HSSC Part-I Marks</label><input type="number" id="hssc_part1_marks" name="hssc_part1_marks"></div>
+                <div class="form-group"><label for="first_choice">First Choice Program</label><select id="first_choice" name="first_choice">${programOptions()}</select></div>
+                <div class="form-group"><label for="second_choice">Second Choice Program</label><select id="second_choice" name="second_choice">${programOptions()}</select></div>
+            </div>
+            <h3>Documents</h3>
+            <div class="grid">
+                <div class="form-group"><label for="profile_picture">Profile Picture</label><input type="file" id="profile_picture" name="profile_picture" accept="image/*"></div>
+            </div>
+            <div class="btn-group end"><button type="submit" id="submit_btn">Submit Application</button></div>
+        </form>`;
+}
+
+showLogin();
+</script>
+</body>
+</html>

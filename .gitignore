@@ -1,0 +1,22 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Secrets — never commit real keys
+.env
+.env.*
+!.env.example
+
+# Backend (Django)
+backend-fyp/.old-git-aikapply-backup/
+backend-fyp/aikapply/venv/
+backend-fyp/aikapply/db.sqlite3
+backend-fyp/aikapply/media/
+__pycache__/
+*.pyc
+
+# Frontend (Vite / React)
+fyp-frontend1/node_modules/
+fyp-frontend1/dist/

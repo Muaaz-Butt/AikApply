@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Admission Portal</title>
+    <style>
+        :root { --primary: #4f46e5; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 40px; display: flex; justify-content: center; }
+        .form-container { background: var(--card); max-width: 900px; width: 100%; padding: 40px; border-radius: 16px; border: 1px solid #334155; }
+        h2 { color: #fff; margin-bottom: 30px; border-left: 4px solid var(--primary); padding-left: 15px; }
+        h3 { font-size: 1.1rem; color: #94a3b8; margin-top: 30px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+        label { font-size: 13px; font-weight: 500; color: #cbd5e1; margin-bottom: 6px; }
+        input, select { background: #0f172a; border: 1px solid #334155; color: white; padding: 12px; border-radius: 8px; font-size: 14px; }
+        input:focus { outline: none; border-color: var(--primary); }
+        .btn-group { margin-top: 40px; display: flex; justify-content: flex-end; }
+        button { background: var(--primary); color: white; border: none; padding: 12px 40px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 10px;}
+        .checkbox-group input { width: auto; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>University Admission Form</h2>
+    
+    <form id="mainApplicationForm">
+        <h3>1. Personal Information</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="student_name">Full Name</label>
+                <input type="text" id="student_name" name="student_name" placeholder="As per Matric">
+            </div>
+            <div class="form-group">
+                <label for="student_cnic">CNIC / B-Form</label>
+                <input type="text" id="student_cnic" name="student_cnic" placeholder="xxxxx-xxxxxxx-x">
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob">
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile">
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email">
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="form-group">
+                <label for="nationality">Nationality</label>
+                <input type="text" id="nationality" name="nationality">
+            </div>
+            <div class="form-group">
+                <label for="religion">Religion</label>
+                <input type="text" id="religion" name="religion">
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="form-group">
+                <label for="province">Province</label>
+                <input type="text" id="province" name="province">
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city">
+            </div>
+            <div class="form-group">
+                <label for="domicile">Domicile District</label>
+                <input type="text" id="domicile" name="domicile">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Permanent Address</label>
+            <input type="text" id="address" name="address">
+        </div>
+
+        <div class="grid">
+            <div class="checkbox-group">
+                <input type="checkbox" id="hafiz_quran" name="hafiz_quran">
+                <label for="hafiz_quran">Are you a Hafiz-e-Quran?</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="hostel" name="hostel">
+                <label for="hostel">Do you require Hostel facility?</label>
+            </div>
+        </div>
+
+        <h3>2. Father / Guardian Information</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="father_name">Father's Name</label>
+                <input type="text" id="father_name" name="father_name">
+            </div>
+            <div class="form-group">
+                <label for="father_cnic">Father's CNIC</label>
+                <input type="text" id="father_cnic" name="father_cnic">
+            </div>
+            <div class="form-group">
+                <label for="father_phone">Father's Phone</label>
+                <input type="tel" id="father_phone" name="father_phone">
+            </div>
+            <div class="form-group">
+                <label for="father_income">Monthly Income</label>
+                <input type="number" id="father_income" name="father_income">
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="form-group">
+                <label for="mother_name">Mother's Name</label>
+                <input type="text" id="mother_name" name="mother_name">
+            </div>
+            <div class="form-group">
+                <label for="guardian_name">Guardian Name (Optional)</label>
+                <input type="text" id="guardian_name" name="guardian_name">
+            </div>
+        </div>
+
+        <h3>3. Academic Record (Matric & Inter)</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="matric_obtained">Matric Obtained Marks</label>
+                <input type="number" id="matric_obtained" name="matric_obtained">
+            </div>
+            <div class="form-group">
+                <label for="matric_total">Matric Total Marks</label>
+                <input type="number" id="matric_total" name="matric_total">
+            </div>
+            <div class="form-group">
+                <label for="board">Educational Board</label>
+                <input type="text" id="board" name="board" placeholder="e.g., BISE Lahore">
+            </div>
+            <div class="form-group">
+                <label for="inter_part_one">Inter Part-1 Marks</label>
+                <input type="number" id="inter_part_one" name="inter_part_one">
+            </div>
+        </div>
+
+        <h3>4. Degree Preferences</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="preference1">First Preference</label>
+                <select id="preference1" name="preference1">
+                    <option value="CS">Computer Science</option>
+                    <option value="SE">Software Engineering</option>
+                    <option value="EE">Electrical Engineering</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="preference2">Second Preference</label>
+                <select id="preference2" name="preference2">
+                    <option value="CS">Computer Science</option>
+                    <option value="SE">Software Engineering</option>
+                    <option value="EE">Electrical Engineering</option>
+                </select>
+            </div>
+        </div>
+
+        <h3>5. Document Uploads</h3>
+        <p style="font-size: 12px; color: #64748b;">(Note: Automated tools will identify these as file input types)</p>
+        <div class="grid">
+            <div class="form-group">
+                <label for="photo">Passport Photo</label>
+                <input type="file" id="photo" name="photo">
+            </div>
+            <div class="form-group">
+                <label for="matric_degree">Matric Certificate</label>
+                <input type="file" id="matric_degree" name="matric_degree">
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" id="submit_application_btn">Submit Application</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

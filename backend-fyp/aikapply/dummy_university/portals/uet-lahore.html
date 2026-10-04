@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UET Lahore — Online Admission (Demo)</title>
+    <style>/*PORTAL_CSS*/</style>
+</head>
+<body>
+<div class="form-container">
+    <span class="portal-badge">Demo portal · Multi-step form</span>
+    <h2>UET Lahore — Online Admission System</h2>
+    <p class="muted">Complete all three steps. Your progress is kept while you move between steps.</p>
+
+    <form id="uetForm" method="post" action="submit/" enctype="multipart/form-data">
+        <div class="steps" id="stepIndicator"></div>
+        <div id="stepContent"></div>
+        <div id="carriedValues"></div>
+        <div class="btn-group" id="stepNav"></div>
+    </form>
+</div>
+
+<script>
+// Each step is rendered fresh (like a React portal), so only the current step's fields exist in the page.
+const STEPS = [
+    {
+        title: "Personal",
+        html: `
+        <h3>Step 1 — Personal Details</h3>
+        <div class="grid">
+            <div class="form-group"><label for="applicant_name">Applicant Name</label><input type="text" id="applicant_name" name="applicant_name"></div>
+            <div class="form-group"><label for="cnic">CNIC / B-Form Number</label><input type="text" id="cnic" name="cnic" placeholder="xxxxx-xxxxxxx-x"></div>
+            <div class="form-group"><label for="date_of_birth">Date of Birth</label><input type="date" id="date_of_birth" name="date_of_birth"></div>
+            <div class="form-group"><label for="gender">Gender</label>
+                <select id="gender" name="gender"><option value="">Select</option><option>Male</option><option>Female</option></select></div>
+            <div class="form-group"><label for="father_name">Father's Name</label><input type="text" id="father_name" name="father_name"></div>
+            <div class="form-group"><label for="domicile">Domicile District</label><input type="text" id="domicile" name="domicile"></div>
+        </div>`
+    },
+    {
+        title: "Contact",
+        html: `
+        <h3>Step 2 — Contact Information</h3>
+        <div class="grid">
+            <div class="form-group"><label for="email">Email Address</label><input type="email" id="email" name="email"></div>
+            <div class="form-group"><label for="phone">Mobile Number</label><input type="tel" id="phone" name="phone"></div>
+            <div class="form-group"><label for="province">Province</label><input type="text" id="province" name="province"></div>
+            <div class="form-group"><label for="city">City</label><input type="text" id="city" name="city"></div>
+        </div>
+        <div class="form-group"><label for="postal_address">Postal Address</label><textarea id="postal_address" name="postal_address" rows="2"></textarea></div>
+        <div class="checkbox-group"><input type="checkbox" id="hostel_required" name="hostel_required"><label for="hostel_required">I need hostel accommodation</label></div>`
+    },
+    {
+        title: "Academics & Documents",
+        html: `
+        <h3>Step 3 — Academic Record, Programs &amp; Documents</h3>
+        <div class="grid">
+            <div class="form-group"><label for="matric_marks">Matric (SSC) Obtained Marks</label><input type="number" id="matric_marks" name="matric_marks"></div>
+            <div class="form-group"><label for="matric_board">Matric Board</label><input type="text" id="matric_board" name="matric_board"></div>
+            <div class="form-group"><label for="fsc_part1_marks">FSc Part-I Marks</label><input type="number" id="fsc_part1_marks" name="fsc_part1_marks"></div>
+            <div class="form-group"><label for="fsc_roll_no">FSc Roll Number</label><input type="text" id="fsc_roll_no" name="fsc_roll_no"></div>
+            <div class="form-group"><label for="program_choice_1">Program Choice 1</label>
+                <select id="program_choice_1" name="program_choice_1">${programOptions()}</select></div>
+            <div class="form-group"><label for="program_choice_2">Program Choice 2</label>
+                <select id="program_choice_2" name="program_choice_2">${programOptions()}</select></div>
+            <div class="form-group"><label for="program_choice_3">Program Choice 3</label>
+                <select id="program_choice_3" name="program_choice_3">${programOptions()}</select></div>
+        </div>
+        <div class="grid">
+            <div class="form-group"><label for="photograph">Recent Photograph</label><input type="file" id="photograph" name="photograph" accept="image/*"></div>
+            <div class="form-group"><label for="fsc_certificate">Inter / FSc Certificate</label><input type="file" id="fsc_certificate" name="fsc_certificate"></div>
+        </div>`
+    }
+];
+
+function programOptions() {
+    return ["", "BS Computer Science", "BS Software Engineering", "BS Data Science", "BS Artificial Intelligence",
+            "BS Information Technology", "BE Electrical Engineering", "BE Mechanical Engineering", "BE Civil Engineering"]
+        .map(p => `<option value="${p}">${p || "Select program"}</option>`).join("");
+}
+
+const state = {};
+let current = 0;
+const content = document.getElementById("stepContent");
+
+function saveStep() {
+    content.querySelectorAll("input, select, textarea").forEach(el => {
+        if (el.type === "file" || !el.name) return;
+        state[el.name] = el.type === "checkbox" ? (el.checked ? "on" : "") : el.value;
+    });
+}
+
+function render(index) {
+    current = index;
+    content.innerHTML = STEPS[index].html;
+    content.querySelectorAll("input, select, textarea").forEach(el => {
+        if (!(el.name in state) || el.type === "file") return;
+        if (el.type === "checkbox") el.checked = state[el.name] === "on";
+        else el.value = state[el.name];
+    });
+    document.getElementById("stepIndicator").innerHTML = STEPS
+        .map((s, i) => `<span class="${i === index ? "active" : ""}">${i + 1}. ${s.title}</span>`).join("");
+
+    const back = index > 0 ? `<button type="button" class="secondary" id="back_btn">Back</button>` : `<span></span>`;
+    const forward = index === STEPS.length - 1
+        ? `<button type="submit" id="submit_btn">Submit Application</button>`
+        : `<button type="button" id="next_btn">Next</button>`;
+    document.getElementById("stepNav").innerHTML = back + forward;
+
+    const backBtn = document.getElementById("back_btn");
+    if (backBtn) backBtn.onclick = () => { saveStep(); render(current - 1); };
+    const nextBtn = document.getElementById("next_btn");
+    if (nextBtn) nextBtn.onclick = () => { saveStep(); render(current + 1); };
+    window.scrollTo(0, 0);
+}
+
+// On submit, carry earlier steps' values along as hidden inputs
+document.getElementById("uetForm").addEventListener("submit", () => {
+    saveStep();
+    const carried = document.getElementById("carriedValues");
+    carried.innerHTML = "";
+    const onPage = new Set([...content.querySelectorAll("[name]")].map(el => el.name));
+    Object.entries(state).forEach(([name, value]) => {
+        if (onPage.has(name)) return;
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.value = value;
+        carried.appendChild(input);
+    });
+});
+
+render(0);
+</script>
+</body>
+</html>

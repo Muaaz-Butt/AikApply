@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air University — Admission Portal (Demo)</title>
+    <style>/*PORTAL_CSS*/</style>
+</head>
+<body>
+<div class="form-container">
+    <span class="portal-badge">Demo portal · Single-page form</span>
+    <h2>Air University — Undergraduate Admission Form</h2>
+    <p class="muted">Fall 2026 admissions. All details must match your Matric record.</p>
+
+    <form id="mainApplicationForm" method="post" action="submit/" enctype="multipart/form-data">
+        <h3>1. Personal Information</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="student_name">Full Name</label>
+                <input type="text" id="student_name" name="student_name" placeholder="As per Matric">
+            </div>
+            <div class="form-group">
+                <label for="student_cnic">CNIC / B-Form</label>
+                <input type="text" id="student_cnic" name="student_cnic" placeholder="xxxxx-xxxxxxx-x">
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob">
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender">
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile">
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="nationality">Nationality</label>
+                <input type="text" id="nationality" name="nationality">
+            </div>
+            <div class="form-group">
+                <label for="religion">Religion</label>
+                <input type="text" id="religion" name="religion">
+            </div>
+            <div class="form-group">
+                <label for="province">Province</label>
+                <input type="text" id="province" name="province">
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city">
+            </div>
+            <div class="form-group">
+                <label for="domicile">Domicile District</label>
+                <input type="text" id="domicile" name="domicile">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Permanent Address</label>
+            <input type="text" id="address" name="address">
+        </div>
+
+        <div class="grid">
+            <div class="checkbox-group">
+                <input type="checkbox" id="hafiz_quran" name="hafiz_quran">
+                <label for="hafiz_quran">Are you a Hafiz-e-Quran?</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="hostel" name="hostel">
+                <label for="hostel">Do you require Hostel facility?</label>
+            </div>
+        </div>
+
+        <h3>2. Father / Guardian Information</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="father_name">Father's Name</label>
+                <input type="text" id="father_name" name="father_name">
+            </div>
+            <div class="form-group">
+                <label for="father_cnic">Father's CNIC</label>
+                <input type="text" id="father_cnic" name="father_cnic">
+            </div>
+            <div class="form-group">
+                <label for="father_phone">Father's Phone</label>
+                <input type="tel" id="father_phone" name="father_phone">
+            </div>
+            <div class="form-group">
+                <label for="father_income">Father's Monthly Income (PKR)</label>
+                <input type="number" id="father_income" name="father_income">
+            </div>
+            <div class="form-group">
+                <label for="mother_name">Mother's Name</label>
+                <input type="text" id="mother_name" name="mother_name">
+            </div>
+            <div class="form-group">
+                <label for="guardian_name">Guardian Name</label>
+                <input type="text" id="guardian_name" name="guardian_name">
+            </div>
+        </div>
+
+        <h3>3. Academic Record (Matric &amp; Inter)</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="matric_obtained">Matric Obtained Marks</label>
+                <input type="number" id="matric_obtained" name="matric_obtained">
+            </div>
+            <div class="form-group">
+                <label for="matric_total">Matric Total Marks</label>
+                <input type="number" id="matric_total" name="matric_total">
+            </div>
+            <div class="form-group">
+                <label for="board">Educational Board</label>
+                <input type="text" id="board" name="board" placeholder="e.g., BISE Lahore">
+            </div>
+            <div class="form-group">
+                <label for="inter_part_one">Inter Part-I Marks</label>
+                <input type="number" id="inter_part_one" name="inter_part_one">
+            </div>
+        </div>
+
+        <h3>4. Degree Preferences</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="preference1">First Preference</label>
+                <select id="preference1" name="preference1">
+                    <option value="">Select program</option>
+                    <option>BS Computer Science</option>
+                    <option>BS Software Engineering</option>
+                    <option>BS Data Science</option>
+                    <option>BS Artificial Intelligence</option>
+                    <option>BS Information Technology</option>
+                    <option>BS Cyber Security</option>
+                    <option>BE Electrical Engineering</option>
+                    <option>BE Mechanical Engineering</option>
+                    <option>BBA</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="preference2">Second Preference</label>
+                <select id="preference2" name="preference2">
+                    <option value="">Select program</option>
+                    <option>BS Computer Science</option>
+                    <option>BS Software Engineering</option>
+                    <option>BS Data Science</option>
+                    <option>BS Artificial Intelligence</option>
+                    <option>BS Information Technology</option>
+                    <option>BS Cyber Security</option>
+                    <option>BE Electrical Engineering</option>
+                    <option>BE Mechanical Engineering</option>
+                    <option>BBA</option>
+                </select>
+            </div>
+        </div>
+
+        <h3>5. Document Uploads</h3>
+        <div class="grid">
+            <div class="form-group">
+                <label for="photo">Passport Size Photo</label>
+                <input type="file" id="photo" name="photo" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="matric_degree">Matric Certificate</label>
+                <input type="file" id="matric_degree" name="matric_degree">
+            </div>
+        </div>
+
+        <div class="btn-group end">
+            <button type="submit" id="submit_application_btn">Submit Application</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
