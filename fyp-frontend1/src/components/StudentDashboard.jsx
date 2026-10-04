@@ -1977,6 +1977,15 @@ export default function StudentDashboard() {
       });
       const data = await res.json();
 
+      // Online demo host can't run the browser automation — not the student's failure
+      if (data.error === "auto_apply_disabled") {
+        setAppUnis(prev => prev.map(a =>
+          a.university_id === u.university_id ? { ...a, status: "Pending" } : a
+        ));
+        alert(`ℹ️ ${data.message}`);
+        return;
+      }
+
       if (res.status === 404 && data.error === "profile_missing") {
         setAppUnis(prev => prev.map(a =>
           a.university_id === u.university_id

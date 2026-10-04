@@ -63,14 +63,21 @@ CSRF_TRUSTED_ORIGINS = ["http://localhost:5173",
                         "http://127.0.0.1:4000/uet"
                         ] + _env_list('DJANGO_CSRF_TRUSTED_ORIGINS')
 
+# Set DJANGO_ALLOW_IFRAME=1 only for hosts that show the app inside an iframe
+# (e.g. Hugging Face Spaces): cookies then need SameSite=None and framing must be allowed.
+ALLOW_IFRAME = os.getenv('DJANGO_ALLOW_IFRAME') == '1'
+
 if not DEBUG:
-    # Production is served over HTTPS behind a proxy, and Hugging Face shows the app
-    # inside an iframe on huggingface.co, so cookies must be Secure + SameSite=None.
+    # Production is served over HTTPS behind a proxy
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SAMESITE = 'None'
-    CSRF_COOKIE_SAMESITE = 'None'
+    if ALLOW_IFRAME:
+        SESSION_COOKIE_SAMESITE = 'None'
+        CSRF_COOKIE_SAMESITE = 'None'
+
+# Auto-apply runs a real browser (needs ~1 GB RAM). Hosts too small for it set AUTO_APPLY_ENABLED=0.
+AUTO_APPLY_ENABLED = os.getenv('AUTO_APPLY_ENABLED', '1') == '1'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -105,8 +112,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if not DEBUG:
-    # Allow the app to be embedded in its Hugging Face Space page
+if not DEBUG and ALLOW_IFRAME:
+    # Allow the app to be embedded in its host's page (e.g. a Hugging Face Space)
     MIDDLEWARE.remove('django.middleware.clickjacking.XFrameOptionsMiddleware')
 
 ROOT_URLCONF = 'aikapply.urls'

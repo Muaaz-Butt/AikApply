@@ -36,7 +36,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY --chown=user backend-fyp/aikapply/ /app/
 COPY --chown=user --from=frontend /frontend/dist /app/frontend_dist
 COPY --chown=user deploy/start.sh /app/start.sh
-RUN chmod +x /app/start.sh && mkdir -p /app/media /app/staticfiles && chown -R user:user /app
+# Collect static files at build time so container start-up stays fast on small CPUs
+RUN python manage.py collectstatic --noinput \
+    && chmod +x /app/start.sh && mkdir -p /app/media && chown -R user:user /app
 
 USER user
 EXPOSE 7860

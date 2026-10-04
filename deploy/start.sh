@@ -3,7 +3,6 @@
 set -e
 
 python manage.py migrate --noinput
-python manage.py collectstatic --noinput
 
 # Create the admin account on first start (DJANGO_SUPERUSER_PASSWORD is read from the env)
 if [ -n "$DJANGO_SUPERUSER_EMAIL" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ]; then
@@ -19,4 +18,4 @@ fi
 exec gunicorn aikapply.wsgi:application \
     --bind "0.0.0.0:${PORT:-7860}" \
     --bind 127.0.0.1:8000 \
-    --workers 2 --threads 4 --timeout 300
+    --workers "${WEB_WORKERS:-2}" --threads 4 --timeout 300

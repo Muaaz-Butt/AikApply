@@ -54,6 +54,20 @@ class ApplyPipelineView(APIView):
 
     def post(self, request):
 
+        if not settings.AUTO_APPLY_ENABLED:
+            return Response(
+                {
+                    "status": "failed",
+                    "error": "auto_apply_disabled",
+                    "message": (
+                        "Auto-apply isn't available in the online demo because it needs "
+                        "more server memory than the free hosting plan provides. "
+                        "Run the project locally to try it."
+                    ),
+                },
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
         # ------------------------------------------------------------------ #
         # 0. INPUT VALIDATION                                                 #
         # ------------------------------------------------------------------ #
