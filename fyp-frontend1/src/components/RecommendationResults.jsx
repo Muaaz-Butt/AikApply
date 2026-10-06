@@ -186,13 +186,13 @@ export default function RecommendationResults() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0620] text-white pt-28 pb-20 px-6 font-poppins">
+    <div className="min-h-screen bg-[#0B0620] text-white pt-28 pb-20 px-4 sm:px-6 font-poppins">
       <div className="max-w-6xl mx-auto">
         <BackToDashboard className="mb-6" />
-        <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <header className="mb-8 sm:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
           <div>
-            <h1 className="text-4xl font-bold mb-2 tracking-tight">AI Recommendations</h1>
-            <p className="text-white/60 text-lg">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-2 tracking-tight">AI Recommendations</h1>
+            <p className="text-white/60 text-base sm:text-lg">
               We found {results.length} universities matching your profile.
             </p>
           </div>
@@ -201,7 +201,7 @@ export default function RecommendationResults() {
           </Link>
         </header>
 
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 gap-6 sm:gap-8">
           {results.map((uni, idx) => (
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -210,16 +210,16 @@ export default function RecommendationResults() {
               key={uni.id || idx} 
               className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-purple-500/50 transition-all duration-300 shadow-xl"
             >
-              <div className="p-8">
+              <div className="p-5 sm:p-8">
                 <div className="flex flex-wrap justify-between items-start gap-4 mb-6">
-                  <div>
+                  <div className="min-w-0">
                     <span className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs font-bold uppercase tracking-wider mb-2 inline-block">
                       {uni.type} • {uni.rank}
                     </span>
                     <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{uni.name}</h2>
                     <p className="text-white/50">{uni.city}, {uni.province}</p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-left sm:text-right">
                     <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
                       {uni.matchScore}%
                     </div>

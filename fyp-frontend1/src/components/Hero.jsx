@@ -27,7 +27,7 @@ export default function Hero() {
       {/* --- PEEKING ROBOT CONTAINER --- */}
       {/* This div is pinned to the absolute left of the screen */}
       {/* --- PEEKING ROBOT CONTAINER (Adjusted Right) --- */}
-      <div className="absolute left-0 top-24 md:top-40 z-0 pointer-events-none select-none">
+      <div className="hidden md:block absolute left-0 top-24 md:top-40 z-0 pointer-events-none select-none">
         <div className="relative -left-8 md:-left-2 w-44 md:w-80">
           <img 
             src={robot} 
@@ -40,6 +40,13 @@ export default function Hero() {
       {/* --- HERO CONTENT --- */}
       <div className="w-full max-w-6xl px-6 md:px-10 relative z-10">
         <div className="flex flex-col items-center text-center gap-6">
+          {/* On phones the robot sits above the headline instead of behind it */}
+          <img
+            src={robot}
+            alt=""
+            aria-hidden="true"
+            className="md:hidden w-28 h-auto -rotate-6 -mb-2 drop-shadow-[0_0_24px_rgba(168,85,247,0.4)] pointer-events-none select-none"
+          />
           <h1 className="text-[40px] md:text-[68px] leading-[1.1] font-bold text-white drop-shadow-md">
             Apply to Universities <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-300">

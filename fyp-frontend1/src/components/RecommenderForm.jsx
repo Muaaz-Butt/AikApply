@@ -773,17 +773,27 @@ export default function RecommenderForm() {
 
   return (
     <section className="min-h-screen flex items-start justify-center bg-[#0B0620] pt-28 md:pt-36 pb-20">
-      <div className="w-full max-w-6xl px-6">
+      <div className="w-full max-w-6xl px-4 sm:px-6">
         <BackToDashboard className="mb-6" />
         <div className="bg-white/10 border border-white/20 rounded-[24px] overflow-hidden backdrop-blur-md">
           <div className="grid grid-cols-1 md:grid-cols-3">
             {/* Sidebar */}
-            <aside className="bg-[#4F3C61] p-8 text-white">
-              <div className="flex items-center gap-3 text-2xl font-semibold mb-10">
+            <aside className="bg-[#4F3C61] p-5 md:p-8 text-white">
+              <div className="flex items-center gap-3 text-xl md:text-2xl font-semibold mb-4 md:mb-10">
                 <span className="inline-block w-8 h-8 rounded bg-white text-[#4F3C61] text-center leading-8 text-sm font-bold">2</span>
                 Recommender
               </div>
-              <ul className="space-y-6">
+              {/* Phones: compact progress instead of the full step list */}
+              <div className="md:hidden">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium">{stepTitles[step]}</span>
+                  <span className="text-white/60">Step {step + 1} of {stepTitles.length}</span>
+                </div>
+                <div className="mt-3 h-1.5 rounded-full bg-white/15 overflow-hidden">
+                  <div className="h-full rounded-full bg-white transition-all duration-300" style={{ width: `${((step + 1) / stepTitles.length) * 100}%` }} />
+                </div>
+              </div>
+              <ul className="hidden md:block space-y-6">
                 {stepTitles.map((title, idx) => (
                   <li key={title} className={`flex items-center gap-4 transition-opacity ${idx === step ? "opacity-100" : "opacity-40"}`}>
                     <div className={`w-9 h-9 rounded-full border flex items-center justify-center shrink-0 ${idx === step ? "bg-white text-[#4F3C61]" : "border-white"}`}>
@@ -796,8 +806,8 @@ export default function RecommenderForm() {
             </aside>
 
             {/* Main content */}
-            <div className="md:col-span-2 p-8 md:p-12 text-white">
-              <h2 className="text-3xl font-bold mb-8">{stepTitles[step]}</h2>
+            <div className="md:col-span-2 p-5 sm:p-8 md:p-12 text-white">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">{stepTitles[step]}</h2>
               {prefilled && (
                 <div className="mb-8 p-4 rounded-lg bg-purple-500/10 border border-purple-400/30 text-sm text-purple-100">
                   Some fields have been pre-filled from your application form. You can edit any of them before submitting.

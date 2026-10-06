@@ -901,13 +901,23 @@ export default function ApplyForm({ embedded = false, onClose }) {
 
   return (
     <section className={`min-h-screen flex items-start justify-center bg-gradient-to-b from-[#0B0620] via-[#200136] to-[#2A013D] ${embedded ? "pt-0" : "pt-28 md:pt-36 pb-20"}`}>
-      <div className="w-full max-w-6xl px-6">
+      <div className="w-full max-w-6xl px-4 sm:px-6">
         {!embedded && <BackToDashboard className="mb-6" />}
         <div className="bg-white/10 border border-white/20 rounded-[24px] shadow-2xl overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-3">
 
-            <aside className="bg-[#4F3C61]/80 p-8">
-              <nav className="space-y-6">
+            <aside className="bg-[#4F3C61]/80 p-5 md:p-8">
+              {/* Phones: compact progress instead of the full step list */}
+              <div className="md:hidden">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-white font-medium">{stepTitles[step]}</span>
+                  <span className="text-white/60">Step {step + 1} of {stepTitles.length}</span>
+                </div>
+                <div className="mt-3 h-1.5 rounded-full bg-white/15 overflow-hidden">
+                  <div className="h-full rounded-full bg-white transition-all duration-300" style={{ width: `${((step + 1) / stepTitles.length) * 100}%` }} />
+                </div>
+              </div>
+              <nav className="hidden md:block space-y-6">
                 {stepTitles.map((title, idx) => (
                   <div key={title} className="flex items-center gap-4">
                     <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-sm shrink-0 ${idx === step ? "bg-white text-[#4F3C61]" : idx < step ? "bg-green-500 border-green-500 text-white" : "text-white/60 border-white/20"}`}>
@@ -919,8 +929,8 @@ export default function ApplyForm({ embedded = false, onClose }) {
               </nav>
             </aside>
 
-            <div className="md:col-span-2 p-10 bg-white/5 text-white">
-              <h2 className="text-3xl font-semibold mb-2">{stepTitles[step]}</h2>
+            <div className="md:col-span-2 p-5 sm:p-8 md:p-10 bg-white/5 text-white">
+              <h2 className="text-2xl sm:text-3xl font-semibold mb-2">{stepTitles[step]}</h2>
               <p className="text-white/50 mb-8 text-sm italic">* Validation is strictly enforced for security</p>
               {isEdit && (
                 <div className="mb-8 p-4 rounded-lg bg-indigo-500/10 border border-indigo-400/30 text-sm text-indigo-100">
@@ -933,7 +943,7 @@ export default function ApplyForm({ embedded = false, onClose }) {
 
                   {step === 0 && (
                     <motion.div key="s0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="col-span-2">
+                      <div className="md:col-span-2">
                         <InputField label="Full Name" value={data.student_name} error={errors.student_name} onChange={update("student_name")} />
                       </div>
                       <InputField label="Student CNIC" value={data.student_cnic} error={errors.student_cnic} onChange={update("student_cnic")} placeholder="xxxxx-xxxxxxx-x" />
@@ -947,23 +957,23 @@ export default function ApplyForm({ embedded = false, onClose }) {
                     <motion.div key="s1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <InputField label="Father's CNIC" value={data.father_cnic} error={errors.father_cnic} onChange={update("father_cnic")} />
                       <InputField label="Father's Mobile" value={data.father_phone} error={errors.father_phone} onChange={update("father_phone")} />
-                      <div className="col-span-2">
+                      <div className="md:col-span-2">
                         <InputField label="Mother's Name" value={data.mother_name} error={errors.mother_name} onChange={update("mother_name")} />
                       </div>
-                      <div className="col-span-2 flex justify-between items-center border-t border-white/10 pt-4">
+                      <div className="md:col-span-2 flex justify-between items-center border-t border-white/10 pt-4">
                         <label className="text-sm font-bold text-indigo-300">Guardian Details</label>
                         <button type="button" onClick={copyFatherToGuardian} className="text-xs bg-indigo-500/20 text-indigo-300 px-3 py-1 rounded border border-indigo-500/30 hover:bg-indigo-500/40 transition">Copy Father's Info</button>
                       </div>
                       <InputField label="Guardian Name" value={data.guardian_name} error={errors.guardian_name} onChange={update("guardian_name")} />
                       <InputField label="Guardian Mobile" value={data.guardian_mobile} error={errors.guardian_mobile} onChange={update("guardian_mobile")} />
-                      <div className="col-span-2">
+                      <div className="md:col-span-2">
                         <InputField label="Guardian CNIC" value={data.guardian_cnic} error={errors.guardian_cnic} onChange={update("guardian_cnic")} />
                       </div>
                       <InputField label="Student Email" value={data.email} error={errors.email} onChange={update("email")} type="email" />
                       <InputField label="Student Mobile" value={data.mobile} error={errors.mobile} onChange={update("mobile")} />
                       <InputField label="Province" value={data.province} error={errors.province} onChange={update("province")} />
                       <InputField label="City" value={data.city} error={errors.city} onChange={update("city")} />
-                      <div className="col-span-2">
+                      <div className="md:col-span-2">
                         <label className="text-sm text-white/70 mb-1 block">Residential Address</label>
                         <textarea className={`w-full bg-white/10 border ${errors.address ? "border-red-500" : "border-white/20"} p-3 rounded text-white h-20 outline-none focus:border-indigo-500 transition-colors`} value={data.address} onChange={update("address")} />
                         {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address}</p>}

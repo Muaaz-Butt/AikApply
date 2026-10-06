@@ -81,11 +81,11 @@
 //               <p className="text-white/60 text-lg">Manage your personal data and security preferences.</p>
 //             </header>
 
-//             <div className="grid grid-cols-1 xl:grid-cols-3 gap-12">
+//             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-12">
               
 //               {/* PERSONAL INFO SECTIONS */}
 //               <div className="xl:col-span-2 space-y-8">
-//                 <section className="bg-white/10 border border-white/20 rounded-[2.5rem] p-10 shadow-2xl backdrop-blur-xl">
+//                 <section className="bg-white/10 border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-8 md:p-10 shadow-2xl backdrop-blur-xl">
 //                   <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest mb-10 border-b border-white/5 pb-4">Identity Details</h3>
 //                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
 //                     <ProfileData label="Full Name" value={profile?.student_name} />
@@ -97,7 +97,7 @@
 //                   </div>
 //                 </section>
 
-//                 <section className="bg-white/10 border border-white/20 rounded-[2.5rem] p-10 shadow-2xl backdrop-blur-xl">
+//                 <section className="bg-white/10 border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-8 md:p-10 shadow-2xl backdrop-blur-xl">
 //                   <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest mb-10 border-b border-white/5 pb-4">Education Summary</h3>
 //                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 //                     <ProfileData label="Matric Marks" value={profile?.matric_obtained} />
@@ -109,7 +109,7 @@
 
 //               {/* SECURITY SECTION */}
 //               <div className="xl:col-span-1">
-//                 <div className="bg-white/10 border border-white/20 rounded-[2.5rem] p-10 shadow-2xl sticky top-10 backdrop-blur-xl">
+//                 <div className="bg-white/10 border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-8 md:p-10 shadow-2xl xl:sticky top-10 backdrop-blur-xl">
 //                   <h3 className="text-2xl font-bold mb-8">Security</h3>
                   
 //                   <form onSubmit={handleUpdatePassword} className="space-y-6">
@@ -281,34 +281,36 @@ export default function ProfilePage() {
       <div className="flex flex-col md:flex-row w-full min-h-[calc(100vh-6rem)]">
         
         {/* SIDEBAR */}
-        <aside className="w-full md:w-80 bg-white/5 border-r border-white/10 p-8 flex flex-col shrink-0">
-          <div className="mb-10">
+        <aside className="w-full md:w-80 bg-white/5 border-b md:border-b-0 md:border-r border-white/10 p-4 md:p-8 flex flex-col shrink-0">
+          <div className="mb-4 md:mb-10 px-1 md:px-0">
             <p className="text-xs font-semibold text-white/40 uppercase mb-2 tracking-widest">Student Session</p>
             <h2 className="text-xl font-bold text-white truncate">{session?.name || session?.username || "Guest"}</h2>
           </div>
 
-          <nav className="space-y-2 flex-1">
-            <button onClick={() => navigate("/dashboard")} className="w-full text-left px-5 py-3 rounded-xl hover:bg-white/10 text-white/80 transition font-medium">Dashboard</button>
-            <button onClick={() => navigate("/my-application")} className="w-full text-left px-5 py-3 rounded-xl hover:bg-white/10 text-white/80 transition font-medium">My Application Form</button>
-            <button className="w-full text-left px-5 py-3 rounded-xl bg-white text-[#0B0620] font-bold shadow-xl">Profile Settings</button>
+          {/* Wrapping row of tabs on phones, a vertical list from md up */}
+          <nav className="flex flex-wrap md:flex-nowrap md:flex-col gap-2 md:gap-0 md:space-y-2 flex-1">
+            <button onClick={() => navigate("/dashboard")} className="shrink-0 md:w-full text-left px-4 md:px-5 py-2.5 md:py-3 rounded-xl hover:bg-white/10 text-white/80 transition font-medium text-sm md:text-base border border-white/10 md:border-0">Dashboard</button>
+            <button onClick={() => navigate("/my-application")} className="shrink-0 md:w-full text-left px-4 md:px-5 py-2.5 md:py-3 rounded-xl hover:bg-white/10 text-white/80 transition font-medium text-sm md:text-base border border-white/10 md:border-0">My Application Form</button>
+            <button className="shrink-0 md:w-full text-left px-4 md:px-5 py-2.5 md:py-3 rounded-xl bg-white text-[#0B0620] font-bold shadow-xl text-sm md:text-base">Profile Settings</button>
+            <button onClick={() => { logout(); navigate("/login"); }} className="md:hidden shrink-0 px-4 py-2.5 rounded-xl text-red-400 transition font-bold border border-red-400/20 text-sm">Log Out</button>
           </nav>
 
-          <button onClick={() => { logout(); navigate("/login"); }} className="mt-10 px-5 py-3 rounded-xl text-red-400 hover:bg-red-400/10 transition text-left font-bold border border-red-400/20">Log Out</button>
+          <button onClick={() => { logout(); navigate("/login"); }} className="hidden md:block mt-10 px-5 py-3 rounded-xl text-red-400 hover:bg-red-400/10 transition text-left font-bold border border-red-400/20">Log Out</button>
         </aside>
 
         {/* MAIN CONTENT */}
-        <main className="flex-1 p-8 md:p-12 lg:p-16 overflow-y-auto">
+        <main className="flex-1 min-w-0 px-4 py-6 sm:p-8 md:p-12 lg:p-16 overflow-y-auto">
           <div className="max-w-[1400px] mx-auto">
             
-            <header className="mb-12 border-b border-white/10 pb-8">
-              <h1 className="text-4xl font-bold mb-2 tracking-tight">Account Settings</h1>
-              <p className="text-white/60 text-lg">Manage your personal data and security preferences.</p>
+            <header className="mb-8 md:mb-12 border-b border-white/10 pb-6 md:pb-8">
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 tracking-tight">Account Settings</h1>
+              <p className="text-white/60 text-base md:text-lg">Manage your personal data and security preferences.</p>
             </header>
 
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-12">
               
               <div className="xl:col-span-2 space-y-8">
-                <section className="bg-white/10 border border-white/20 rounded-[2.5rem] p-10 shadow-2xl backdrop-blur-xl">
+                <section className="bg-white/10 border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-8 md:p-10 shadow-2xl backdrop-blur-xl">
                   <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest mb-10 border-b border-white/5 pb-4">Identity Details</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                     <ProfileData label="Full Name" value={profile?.student_name} />
@@ -320,7 +322,7 @@ export default function ProfilePage() {
                   </div>
                 </section>
 
-                <section className="bg-white/10 border border-white/20 rounded-[2.5rem] p-10 shadow-2xl backdrop-blur-xl">
+                <section className="bg-white/10 border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-8 md:p-10 shadow-2xl backdrop-blur-xl">
                   <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest mb-10 border-b border-white/5 pb-4">Education Summary</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <ProfileData label="Matric Marks" value={profile?.matric_obtained} />
@@ -331,7 +333,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="xl:col-span-1">
-                <div className="bg-white/10 border border-white/20 rounded-[2.5rem] p-10 shadow-2xl sticky top-10 backdrop-blur-xl">
+                <div className="bg-white/10 border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-8 md:p-10 shadow-2xl xl:sticky top-10 backdrop-blur-xl">
                   <h3 className="text-2xl font-bold mb-8 tracking-tight">Security</h3>
                   
                   <form onSubmit={handleUpdatePassword} className="space-y-6">

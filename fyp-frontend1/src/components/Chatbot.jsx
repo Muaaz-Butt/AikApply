@@ -384,17 +384,18 @@ export default function Chatbot() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about universities, careers..."
-            className="w-full pl-6 pr-28 py-4 rounded-2xl bg-white text-black text-sm outline-none focus:ring-2 focus:ring-purple-500 shadow-xl"
+            className="w-full pl-4 sm:pl-6 pr-16 sm:pr-28 py-4 rounded-2xl bg-white text-black text-sm outline-none focus:ring-2 focus:ring-purple-500 shadow-xl"
             disabled={isTyping}
           />
 
           <button
             type="submit"
             disabled={!input.trim() || isTyping}
-            className="absolute right-2 px-6 py-3 rounded-xl bg-[#0B0620] text-white font-semibold flex items-center gap-2 hover:bg-black transition active:scale-95 disabled:opacity-30"
+            aria-label="Send"
+            className="absolute right-2 px-3.5 sm:px-6 py-3 rounded-xl bg-[#0B0620] text-white font-semibold flex items-center gap-2 hover:bg-black transition active:scale-95 disabled:opacity-30"
           >
             <Send size={16} />
-            Send
+            <span className="hidden sm:inline">Send</span>
           </button>
         </form>
       </div>

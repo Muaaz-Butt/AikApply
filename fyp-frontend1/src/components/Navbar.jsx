@@ -115,6 +115,10 @@ export default function Navbar() {
         ) : (
           /* SHOW THESE ONLY WHEN LOGGED IN */
           <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+          {/* Phones: the menu needs real links, not just the profile photo */}
+          <Link to="/dashboard" onClick={() => setOpen(false)} className="md:hidden text-white/90 hover:text-white transition font-medium">Dashboard</Link>
+          <Link to="/my-application" onClick={() => setOpen(false)} className="md:hidden text-white/90 hover:text-white transition font-medium">My Application</Link>
+          <Link to="/recommend" onClick={() => setOpen(false)} className="md:hidden text-white/90 hover:text-white transition font-medium">University Recommender</Link>
           <Link
           to="/profile"
           onClick={() => setOpen(false)}
@@ -132,6 +136,7 @@ export default function Navbar() {
             "Profile"
           )}
         </Link>
+          <button onClick={handleLogout} className="md:hidden text-red-400 hover:text-red-300 transition font-semibold">Log Out</button>
 
           </div>
         )}

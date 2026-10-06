@@ -1880,6 +1880,7 @@ export default function StudentDashboard() {
   const [uploadErr, setUploadErr]     = React.useState("");
   const [uploading, setUploading]     = React.useState(false);
   const [lightboxSrc, setLightboxSrc] = React.useState(null);
+  const [menuOpen, setMenuOpen]       = React.useState(false);  // mobile sidebar
   const fileInputRef = React.useRef();
   const [displayName, setDisplayName] = React.useState(session?.name || "");
   const [isAdmin, setIsAdmin]         = React.useState(!!session?.isAdmin);
@@ -2067,7 +2068,7 @@ export default function StudentDashboard() {
   const renderNavItem = ({ key, label, badge, path }) => (
     <button
       key={key}
-      onClick={() => (path ? navigate(path) : setTab(key))}
+      onClick={() => { setMenuOpen(false); path ? navigate(path) : setTab(key); }}
       className={`w-full text-left px-5 py-3.5 rounded-xl transition-all duration-200 flex items-center justify-between
         ${!path && tab === key ? "bg-white text-[#0B0620] font-bold shadow-xl" : "text-white/60 hover:bg-white/10 hover:text-white"}`}
     >
@@ -2086,11 +2087,23 @@ export default function StudentDashboard() {
     <>
     <section className="min-h-screen bg-gradient-to-b from-[#0B0620] via-[#200136] to-[#2A013D] pt-20">
 
-      <div className="flex w-full min-h-[calc(100vh-5rem)]">
+      <div className="flex flex-col md:flex-row w-full min-h-[calc(100vh-5rem)]">
+
+        {/* ── MOBILE MENU TOGGLE ── */}
+        <div className="md:hidden px-4 pt-4">
+          <button
+            onClick={() => setMenuOpen(o => !o)}
+            aria-expanded={menuOpen}
+            className="w-full flex items-center justify-between px-5 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white font-semibold"
+          >
+            <span className="truncate">{[...navItems, ...aiNavItems].find(n => n.key === tab)?.label || "Menu"}</span>
+            <span className="text-white/60 text-sm shrink-0 ml-3">{menuOpen ? "✕ Close" : "☰ Menu"}</span>
+          </button>
+        </div>
 
         {/* ── SIDEBAR ── */}
-        <aside className="w-full md:w-72 bg-white/5 backdrop-blur-md border-r border-white/10 p-6 flex flex-col shrink-0">
-          <div className="mb-8">
+        <aside className={`${menuOpen ? "flex" : "hidden"} md:flex w-auto md:w-72 mx-4 mt-2 md:m-0 rounded-2xl md:rounded-none bg-white/5 backdrop-blur-md border border-white/10 md:border-0 md:border-r p-4 md:p-6 flex-col shrink-0`}>
+          <div className="mb-6 md:mb-8">
             <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
               <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1">Active Session</p>
               <div className="text-base font-semibold text-white truncate">
@@ -2146,7 +2159,7 @@ export default function StudentDashboard() {
         </aside>
 
         {/* ── MAIN CONTENT ── */}
-        <main className="flex-1 p-8 md:p-12 lg:p-16 overflow-y-auto">
+        <main className="flex-1 min-w-0 px-4 py-6 sm:p-8 md:p-12 lg:p-16 overflow-y-auto">
           <div className="max-w-[1400px]">
 
             {/* HOME */}
@@ -2154,8 +2167,8 @@ export default function StudentDashboard() {
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="flex flex-col lg:flex-row lg:gap-16">
                   <div className="flex-1">
-                    <h1 className="text-4xl font-bold mb-3 text-white">Available Universities</h1>
-                    <p className="text-white/50 text-lg mb-12">
+                    <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-white">Available Universities</h1>
+                    <p className="text-white/50 text-base sm:text-lg mb-8 sm:mb-12">
                       Select an institution to start your automated application process.
                     </p>
 
@@ -2172,19 +2185,19 @@ export default function StudentDashboard() {
                         isAdmin={isAdmin}
                       />
                     ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8">
                         {universities.map((u) => {
                           const d = daysLeft(u.deadline);
                           const urgentColor = d <= 14 ? "text-red-400" : d <= 30 ? "text-orange-400" : "text-white/80";
                           return (
                             <div key={u.id}
-                              className="group bg-white/5 border border-white/10 rounded-[2rem] p-8 flex flex-col gap-6 hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 shadow-2xl">
-                              <div className="flex items-start justify-between">
-                                <div>
-                                  <h3 className="text-xl font-bold text-white">{u.name}</h3>
+                              className="group bg-white/5 border border-white/10 rounded-[2rem] p-6 sm:p-8 flex flex-col gap-6 hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 shadow-2xl">
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0">
+                                  <h3 className="text-xl font-bold text-white break-words">{u.name}</h3>
                                   {u.program && <p className="text-sm text-white/40 mt-1">{u.program}</p>}
                                 </div>
-                                <span className={`text-[10px] px-3 py-1.5 rounded-lg uppercase font-black tracking-widest ${statusBadgeClass(u.status)}`}>
+                                <span className={`text-[10px] px-3 py-1.5 rounded-lg uppercase font-black tracking-widest shrink-0 ${statusBadgeClass(u.status)}`}>
                                   {u.status}
                                 </span>
                               </div>
@@ -2243,7 +2256,7 @@ export default function StudentDashboard() {
 
                 {/* Mobile deadline panel */}
                 {dbPopulated && !loadingApi && (
-                  <div className="lg:hidden mt-12 bg-white/5 border border-white/10 rounded-[2rem] p-6">
+                  <div className="lg:hidden mt-8 sm:mt-12 bg-white/5 border border-white/10 rounded-[2rem] p-5 sm:p-6">
                     <UpcomingDeadlines universities={universities} />
                   </div>
                 )}
@@ -2253,8 +2266,8 @@ export default function StudentDashboard() {
             {/* DEADLINES TAB */}
             {tab === "deadlines" && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="flex items-center justify-between mb-3">
-                  <h1 className="text-4xl font-bold text-white">Deadlines</h1>
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                  <h1 className="text-3xl sm:text-4xl font-bold text-white">Deadlines</h1>
                   {isAdmin && (
                     <button
                       onClick={() => fileInputRef.current.click()}
@@ -2265,7 +2278,7 @@ export default function StudentDashboard() {
                     </button>
                   )}
                 </div>
-                <p className="text-white/50 text-lg mb-12">Upcoming admission deadlines for all listed universities.</p>
+                <p className="text-white/50 text-base sm:text-lg mb-8 sm:mb-12">Upcoming admission deadlines for all listed universities.</p>
 
                 {loadingApi ? (
                   <div className="flex items-center gap-3 text-white/40 py-20">
@@ -2276,7 +2289,7 @@ export default function StudentDashboard() {
                   <EmptyDeadlinesPrompt onUpload={handleExcelUpload} uploading={uploading} error={uploadErr} isAdmin={isAdmin} />
                 ) : (
                   <>
-                    <div className="max-w-2xl bg-white/5 border border-white/10 rounded-[2rem] p-8 shadow-2xl">
+                    <div className="max-w-2xl bg-white/5 border border-white/10 rounded-[2rem] p-5 sm:p-8 shadow-2xl">
                       <UpcomingDeadlines universities={universities} />
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10 max-w-2xl">
@@ -2376,7 +2389,7 @@ export default function StudentDashboard() {
                                 :                            "bg-red-500"}`}
                               />
 
-                              <div className="p-7 flex flex-col gap-5 flex-1">
+                              <div className="p-5 sm:p-7 flex flex-col gap-5 flex-1">
 
                                 {/* Header */}
                                 <div className="flex items-start justify-between gap-3">
@@ -2569,7 +2582,7 @@ export default function StudentDashboard() {
 
             {/* CHATBOT TAB */}
             {tab === "chatbot" && (
-              <div className="h-[calc(100vh-14rem)] bg-white/5 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl">
+              <div className="h-[calc(100dvh-12rem)] md:h-[calc(100vh-14rem)] min-h-[420px] bg-white/5 border border-white/10 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl">
                 <Chatbot />
               </div>
             )}
