@@ -261,19 +261,19 @@ export default function Chatbot() {
     //     `}</style>
     //   </section>
     // );
-    <section className="h-full w-full bg-gradient-to-b from-[#0B0620] via-[#200136] to-[#2A013D] rounded-[2.5rem] p-4 md:p-6 flex flex-col">
+    <section className="h-full w-full bg-gradient-to-b from-[#0B0620] via-[#200136] to-[#2A013D] rounded-[1.5rem] md:rounded-[2.5rem] p-2 sm:p-4 md:p-6 flex flex-col">
   
   {/* MAIN CONTAINER */}
   <div className="w-full h-full flex flex-col">
 
     {/* HEADER */}
-    <div className="bg-white/10 border border-white/20 rounded-3xl p-4 mb-4 flex shrink-0 items-center justify-between backdrop-blur-xl shadow-xl">
+    <div className="bg-white/10 border border-white/20 rounded-2xl md:rounded-3xl p-3 md:p-4 mb-2 md:mb-4 flex shrink-0 items-center justify-between backdrop-blur-xl shadow-xl">
       <div className="flex items-center gap-3">
         <div className="relative">
           <img
             src={robotImage}
             alt="AI Bot"
-            className="w-12 h-12 rounded-xl object-cover border border-white/30"
+            className="w-10 h-10 md:w-12 md:h-12 rounded-xl object-cover border border-white/30"
           />
           <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-[#1A012E] rounded-full animate-pulse"></div>
         </div>
@@ -291,17 +291,17 @@ export default function Chatbot() {
     </div>
 
     {/* CHAT BOX */}
-    <div className="flex-1 flex flex-col bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-[2rem] p-4 md:p-6 overflow-hidden shadow-inner">
+    <div className="flex-1 flex flex-col bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-2xl md:rounded-[2rem] p-2.5 sm:p-4 md:p-6 overflow-hidden shadow-inner">
 
       {/* MESSAGES */}
-      <div className="flex-1 overflow-y-auto space-y-6 pr-2 scroll-smooth">
+      <div className="flex-1 overflow-y-auto space-y-5 md:space-y-6 pr-0.5 md:pr-2 scroll-smooth">
 
         {messages.map((m) => (
           <div
             key={m.id}
             className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} animate-[fadeIn_0.3s_ease]`}
           >
-            <div className={`flex gap-3 max-w-[85%] ${m.sender === "user" ? "flex-row-reverse" : ""}`}>
+            <div className={`flex gap-3 min-w-0 ${m.sender === "user" ? "flex-row-reverse max-w-[88%] sm:max-w-[85%]" : "w-full sm:w-auto sm:max-w-[85%]"}`}>
 
               {/* AVATAR */}
               {m.sender === "user" && userPhoto && !photoFailed ? (
@@ -309,19 +309,19 @@ export default function Chatbot() {
                   src={userPhoto}
                   alt="You"
                   onError={() => setPhotoFailed(true)}
-                  className="w-9 h-9 rounded-full object-cover shrink-0 border border-white/10 shadow-lg"
+                  className="hidden sm:block w-9 h-9 rounded-full object-cover shrink-0 border border-white/10 shadow-lg"
                 />
               ) : (
-                <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border border-white/10 shadow-lg
+                <div className={`hidden sm:flex w-9 h-9 rounded-lg items-center justify-center shrink-0 border border-white/10 shadow-lg
                   ${m.sender === "user" ? "bg-white text-black" : "bg-purple-600 text-white"}`}>
                   {m.sender === "user" ? <User size={18} /> : <Bot size={18} />}
                 </div>
               )}
 
               {/* MESSAGE */}
-              <div className="group relative space-y-1">
+              <div className="group relative space-y-1 min-w-0 flex-1 sm:flex-initial">
                 <div
-                  className={`p-4 rounded-2xl text-sm leading-relaxed shadow-lg relative
+                  className={`px-4 py-3 sm:p-4 rounded-2xl text-[15px] sm:text-sm leading-relaxed shadow-lg relative break-words
                   ${m.sender === "user"
                     ? "bg-white text-black font-medium rounded-tr-none"
                     : "bg-gradient-to-br from-[#1A0B2E] to-[#140822] text-gray-200 border border-white/10 rounded-tl-none markdown-body"
@@ -338,7 +338,7 @@ export default function Chatbot() {
                   {/* COPY BUTTON */}
                   <button
                     onClick={() => handleCopy(m.id, m.text)}
-                    className={`absolute ${m.sender === "user" ? "-left-10" : "-right-10"} top-2 p-2 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition hover:bg-white/20`}
+                    className={`hidden sm:block absolute ${m.sender === "user" ? "-left-10" : "-right-10"} top-2 p-2 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition hover:bg-white/20`}
                   >
                     {copiedId === m.id ? (
                       <Check size={14} className="text-green-400" />
@@ -348,12 +348,24 @@ export default function Chatbot() {
                   </button>
                 </div>
 
-                <p className="text-[10px] text-white/20">
-                  {m.timestamp.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </p>
+                <div className={`flex items-center gap-3 ${m.sender === "user" ? "justify-end sm:justify-start" : ""}`}>
+                  <p className="text-[10px] text-white/30 sm:text-white/20">
+                    {m.timestamp.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                  {/* Phones have no hover, so the copy action sits under the message */}
+                  {m.sender === "bot" && (
+                    <button
+                      onClick={() => handleCopy(m.id, m.text)}
+                      className="sm:hidden flex items-center gap-1 text-[11px] text-white/40 active:text-white"
+                    >
+                      {copiedId === m.id ? <Check size={12} className="text-green-400" /> : <Copy size={12} />}
+                      {copiedId === m.id ? "Copied" : "Copy"}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -361,8 +373,8 @@ export default function Chatbot() {
 
         {/* TYPING INDICATOR */}
         {isTyping && (
-          <div className="flex gap-2 ml-12">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-purple-600 text-white">
+          <div className="flex gap-2 sm:ml-12">
+            <div className="hidden sm:flex w-9 h-9 rounded-lg items-center justify-center bg-purple-600 text-white">
               <Loader2 size={16} className="animate-spin" />
             </div>
             <div className="bg-[#180A2D] border border-white/10 rounded-2xl p-4 flex gap-1">
@@ -377,7 +389,7 @@ export default function Chatbot() {
       </div>
 
       {/* INPUT BAR */}
-      <div className="sticky bottom-0 pt-4 bg-gradient-to-t from-[#0B0620] via-transparent to-transparent">
+      <div className="sticky bottom-0 pt-3 md:pt-4 bg-gradient-to-t from-[#0B0620] via-transparent to-transparent">
         <form onSubmit={handleSend} className="relative flex items-center">
           <input
             type="text"
