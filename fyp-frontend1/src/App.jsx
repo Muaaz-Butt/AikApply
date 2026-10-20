@@ -13,6 +13,7 @@ import ProfilePage from "./components/Profile";
 import RecommenderForm from "./components/RecommenderForm";
 import RecommendationResults from "./components/RecommendationResults";
 import ApplicationView from "./components/ApplicationView";
+import Legal from "./components/Legal";
 
 export default function App() {
   const location = useLocation();
@@ -30,6 +31,8 @@ export default function App() {
         >
           <Routes location={location}>
             <Route path="/" element={<Hero />} />
+            <Route path="/privacy" element={<Legal page="privacy" />} />
+            <Route path="/terms" element={<Legal page="terms" />} />
             <Route path="/login" element={<ProtectedRoute guestOnly><Login /></ProtectedRoute>} />
             <Route path="/signup" element={<ProtectedRoute guestOnly><Signup /></ProtectedRoute>} />
             {/* The server must confirm a signed-in user before these render */}

@@ -1788,16 +1788,34 @@ function EmptyDeadlinesPrompt({ onUpload, uploading, error, isAdmin }) {
 
 // ── Screenshot lightbox ───────────────────────────────────────────────────────
 
-function ScreenshotLightbox({ src, onClose }) {
+function ScreenshotLightbox({ images, startIndex = 0, onClose }) {
+  const [index, setIndex] = React.useState(startIndex);
+  const count = images.length;
+  const prev = React.useCallback(() => setIndex(i => (i - 1 + count) % count), [count]);
+  const next = React.useCallback(() => setIndex(i => (i + 1) % count), [count]);
+  const touchX = React.useRef(null);
+
   React.useEffect(() => {
-    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    const handler = (e) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === "ArrowRight") next();
+    };
     window.addEventListener("keydown", handler);
     document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", handler);
       document.body.style.overflow = "";
     };
-  }, [onClose]);
+  }, [onClose, prev, next]);
+
+  const navButton = (side) => ({
+    position: "absolute", top: "50%", [side]: "8px", transform: "translateY(-50%)",
+    width: "44px", height: "44px", borderRadius: "50%",
+    background: "rgba(0,0,0,0.55)", border: "1px solid rgba(255,255,255,0.25)",
+    color: "#fff", fontSize: "22px", cursor: "pointer",
+    display: "flex", alignItems: "center", justifyContent: "center",
+  });
 
   return ReactDOM.createPortal(
     <div
@@ -1810,6 +1828,13 @@ function ScreenshotLightbox({ src, onClose }) {
     >
       <div
         onClick={e => e.stopPropagation()}
+        onTouchStart={e => { touchX.current = e.touches[0].clientX; }}
+        onTouchEnd={e => {
+          if (touchX.current === null || count < 2) return;
+          const dx = e.changedTouches[0].clientX - touchX.current;
+          touchX.current = null;
+          if (Math.abs(dx) > 40) (dx > 0 ? prev : next)();
+        }}
         style={{ position: "relative", maxWidth: "90vw", maxHeight: "90vh" }}
       >
         <button
@@ -1825,15 +1850,24 @@ function ScreenshotLightbox({ src, onClose }) {
           ✕
         </button>
         <img
-          src={src}
-          alt="Screenshot"
+          src={images[index]}
+          alt={`Step ${index + 1} of ${count}`}
           style={{
             display: "block", borderRadius: "16px",
-            maxHeight: "85vh", maxWidth: "90vw",
+            maxHeight: "80vh", maxWidth: "90vw",
             objectFit: "contain",
             border: "1px solid rgba(255,255,255,0.1)",
           }}
         />
+        {count > 1 && (
+          <>
+            <button onClick={prev} aria-label="Previous screenshot" style={navButton("left")}>‹</button>
+            <button onClick={next} aria-label="Next screenshot" style={navButton("right")}>›</button>
+          </>
+        )}
+        <p style={{ textAlign: "center", color: "rgba(255,255,255,0.7)", fontSize: "13px", marginTop: "10px" }}>
+          Step {index + 1} of {count}
+        </p>
       </div>
     </div>,
     document.body
@@ -1879,7 +1913,7 @@ export default function StudentDashboard() {
   const [loadingApi, setLoadingApi]   = React.useState(true);
   const [uploadErr, setUploadErr]     = React.useState("");
   const [uploading, setUploading]     = React.useState(false);
-  const [lightboxSrc, setLightboxSrc] = React.useState(null);
+  const [lightbox, setLightbox] = React.useState(null); // { images, index }
   const [menuOpen, setMenuOpen]       = React.useState(false);  // mobile sidebar
   const fileInputRef = React.useRef();
   const [displayName, setDisplayName] = React.useState(session?.name || "");
@@ -2485,7 +2519,7 @@ export default function StudentDashboard() {
                                         <div
                                           key={i}
                                           className="relative group cursor-pointer rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all"
-                                          onClick={() => setLightboxSrc(src)}
+                                          onClick={() => setLightbox({ images: screenshots, index: i })}
                                         >
                                           <img
                                             src={src}
@@ -2526,7 +2560,7 @@ export default function StudentDashboard() {
                                 {/* Action buttons */}
                                 <div className="flex gap-2 mt-auto pt-2">
                                   <button
-                                    onClick={() => navigate("/apply", { state: { edit: true, universityId: u.university_id } })}
+                                    onClick={() => navigate("/my-application")}
                                     className="flex-1 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-all text-sm font-bold text-white"
                                   >
                                     View Form
@@ -2541,7 +2575,7 @@ export default function StudentDashboard() {
                                   )}
                                   {u.status === "Applied" && screenshots.length > 0 && (
                                     <button
-                                      onClick={() => setLightboxSrc(screenshots[0])}
+                                      onClick={() => setLightbox({ images: screenshots, index: 0 })}
                                       className="flex-1 py-3 rounded-xl bg-emerald-500/10 border border-emerald-400/30 hover:bg-emerald-500/20 transition-all text-sm font-bold text-emerald-300"
                                     >
                                       View Proof
@@ -2591,8 +2625,8 @@ export default function StudentDashboard() {
         </main>
       </div>
     </section>
-    {lightboxSrc && (
-      <ScreenshotLightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
+    {lightbox && (
+      <ScreenshotLightbox images={lightbox.images} startIndex={lightbox.index} onClose={() => setLightbox(null)} />
     )}
     </>
   );
