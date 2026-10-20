@@ -113,12 +113,13 @@
 // }
 
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import api from "../api/axios"; 
 import { setSession } from "../utils/authStore";
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -171,8 +172,9 @@ export default function Login() {
         password: password,
       });
 
-      setSession(email, response.data?.name, response.data?.is_admin);
-      navigate("/dashboard", { replace: true });
+      setSession(response.data?.email || email.trim(), response.data?.name, response.data?.is_admin);
+      // Return to the page that asked for a login, if any
+      navigate(location.state?.from || "/dashboard", { replace: true });
       
     } catch (err) {
       console.error("Login error:", err);

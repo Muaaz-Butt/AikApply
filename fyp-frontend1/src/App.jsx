@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -8,21 +8,11 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import ApplyForm from "./components/ApplyForm";
 import StudentDashboard from "./components/StudentDashboard";
-import { getSession } from "./utils/authStore"; // Import your session checker
+import ProtectedRoute from "./components/protectedRoute";
 import ProfilePage from "./components/Profile";
 import RecommenderForm from "./components/RecommenderForm";
 import RecommendationResults from "./components/RecommendationResults";
 import ApplicationView from "./components/ApplicationView";
-
-// Simple Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const session = getSession();
-  if (!session) {
-    // Redirect to login if no session is found
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-};
 
 export default function App() {
   const location = useLocation();
@@ -40,11 +30,12 @@ export default function App() {
         >
           <Routes location={location}>
             <Route path="/" element={<Hero />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/recommend" element={<RecommenderForm />} />
-<Route path="/recommendations" element={<RecommendationResults />} />
+            <Route path="/login" element={<ProtectedRoute guestOnly><Login /></ProtectedRoute>} />
+            <Route path="/signup" element={<ProtectedRoute guestOnly><Signup /></ProtectedRoute>} />
+            {/* The server must confirm a signed-in user before these render */}
+            <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+            <Route path="/recommend" element={<ProtectedRoute><RecommenderForm /></ProtectedRoute>} />
+            <Route path="/recommendations" element={<ProtectedRoute><RecommendationResults /></ProtectedRoute>} />
             {/* Protected Routes */}
             <Route path="/apply" element={
               <ProtectedRoute>

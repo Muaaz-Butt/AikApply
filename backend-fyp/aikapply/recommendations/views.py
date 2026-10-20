@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.db import models
 from .models import UserProfile, University, Recommendation
@@ -25,7 +25,13 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     """
     authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
     queryset = UserProfile.objects.all()
-    permission_classes = [AllowAny]
+
+    # Students only submit their own form; listing, reading or editing other people's
+    # recommender profiles (names, emails, phones, marks) is for admins only
+    def get_permissions(self):
+        if self.action == 'submit_and_recommend':
+            return [IsAuthenticated()]
+        return [IsAdminUser()]
     
     def get_serializer_class(self):
         if self.action == 'create':
@@ -113,6 +119,9 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             
             # Get transformed data (mapped from camelCase to snake_case)
             transformed_data = frontend_serializer.get_mapped_data()
+            # Key the profile on the signed-in account, so nobody can overwrite another
+            # student's profile by typing their email into the form
+            transformed_data['email'] = request.user.email
             
             # Create or update user profile (based on email)
             user_profile, created = UserProfile.objects.update_or_create(
@@ -224,7 +233,7 @@ class RecommendationViewSet(viewsets.ReadOnlyModelViewSet):
     authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
     queryset = Recommendation.objects.all()
     serializer_class = RecommendationSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]  # recommendations reveal whose profile they belong to
     
     def get_queryset(self):
         """

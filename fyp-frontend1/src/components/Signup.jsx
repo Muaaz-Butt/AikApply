@@ -131,6 +131,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import { setSession } from "../utils/authStore";
 
 // --- 1. MOVED OUTSIDE TO PREVENT RE-CREATION ON EVERY RENDER ---
 const FormInput = ({ label, value, type, name, placeholder, onChange, error, optional = false }) => (
@@ -232,14 +233,16 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      await api.post("auth/signup/", {
+      const { data } = await api.post("auth/signup/", {
         email: email.trim(),
         name: `${firstName.trim()} ${lastName.trim()}`,
         phone: phone,
         password: password,
       });
 
-      navigate("/login", { replace: true });
+      // The server signs the new account in, so keep the frontend in step with it
+      setSession(data?.email || email.trim(), data?.name, data?.is_admin);
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       if (err.response && err.response.data) {
         const serverMsg = typeof err.response.data === "object"

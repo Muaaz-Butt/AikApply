@@ -292,10 +292,10 @@ export default function ProfilePage() {
             <button onClick={() => navigate("/dashboard")} className="shrink-0 md:w-full text-left px-4 md:px-5 py-2.5 md:py-3 rounded-xl hover:bg-white/10 text-white/80 transition font-medium text-sm md:text-base border border-white/10 md:border-0">Dashboard</button>
             <button onClick={() => navigate("/my-application")} className="shrink-0 md:w-full text-left px-4 md:px-5 py-2.5 md:py-3 rounded-xl hover:bg-white/10 text-white/80 transition font-medium text-sm md:text-base border border-white/10 md:border-0">My Application Form</button>
             <button className="shrink-0 md:w-full text-left px-4 md:px-5 py-2.5 md:py-3 rounded-xl bg-white text-[#0B0620] font-bold shadow-xl text-sm md:text-base">Profile Settings</button>
-            <button onClick={() => { logout(); navigate("/login"); }} className="md:hidden shrink-0 px-4 py-2.5 rounded-xl text-red-400 transition font-bold border border-red-400/20 text-sm">Log Out</button>
+            <button onClick={async () => { await logout(); navigate("/login", { replace: true }); }} className="md:hidden shrink-0 px-4 py-2.5 rounded-xl text-red-400 transition font-bold border border-red-400/20 text-sm">Log Out</button>
           </nav>
 
-          <button onClick={() => { logout(); navigate("/login"); }} className="hidden md:block mt-10 px-5 py-3 rounded-xl text-red-400 hover:bg-red-400/10 transition text-left font-bold border border-red-400/20">Log Out</button>
+          <button onClick={async () => { await logout(); navigate("/login", { replace: true }); }} className="hidden md:block mt-10 px-5 py-3 rounded-xl text-red-400 hover:bg-red-400/10 transition text-left font-bold border border-red-400/20">Log Out</button>
         </aside>
 
         {/* MAIN CONTENT */}

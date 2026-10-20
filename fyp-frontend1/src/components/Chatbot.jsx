@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { Send, User, Bot, Loader2, Copy, Check } from "lucide-react";
 import useProfilePhoto from "../utils/useProfilePhoto";
 import { API_BASE } from "../config";
+import { chatStorageKey } from "../utils/authStore";
 
 export default function Chatbot() {
   const userPhoto = useProfilePhoto();
@@ -25,11 +26,13 @@ export default function Chatbot() {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // Initialize or retrieve Session ID for persistent chat context
-    let storedSession = localStorage.getItem("chat_session_id");
+    // Chat history is kept per signed-in user and cleared on logout, so the next person
+    // on this browser never sees someone else's conversation
+    const key = chatStorageKey();
+    let storedSession = key ? localStorage.getItem(key) : null;
     if (!storedSession) {
       storedSession = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2) + Date.now().toString(36);
-      localStorage.setItem("chat_session_id", storedSession);
+      if (key) localStorage.setItem(key, storedSession);
     }
     setSessionId(storedSession);
   }, []);

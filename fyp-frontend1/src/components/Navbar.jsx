@@ -40,7 +40,7 @@
 // }
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { getSession, logout } from "../utils/authStore";
+import { AUTH_EVENT, getSession, logout, verifySession } from "../utils/authStore";
 import useProfilePhoto from "../utils/useProfilePhoto";
 
 export default function Navbar() {
@@ -58,17 +58,18 @@ export default function Navbar() {
       setIsLoggedIn(!!getSession());
     };
 
-    // Listen for the custom "authUpdate" event from your authStore
-    window.addEventListener("authUpdate", syncAuth);
+    window.addEventListener(AUTH_EVENT, syncAuth);
     syncAuth();
+    // Confirm with the server; a leftover session from someone who logged out is cleared here
+    verifySession().then((session) => setIsLoggedIn(!!session));
 
-    return () => window.removeEventListener("authUpdate", syncAuth);
+    return () => window.removeEventListener(AUTH_EVENT, syncAuth);
   }, [location]);
 
-  const handleLogout = () => {
-    logout(); 
+  const handleLogout = async () => {
     setOpen(false);
-    navigate("/login");
+    await logout();
+    navigate("/login", { replace: true });
   };
 
   const goToSection = (id) => {

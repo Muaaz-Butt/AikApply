@@ -2044,7 +2044,7 @@ export default function StudentDashboard() {
     }
   };
 
-  const onLogout = () => { logout(); navigate("/login", { replace: true }); };
+  const onLogout = async () => { await logout(); navigate("/login", { replace: true }); };
 
   const criticalCount = universities.filter(u => {
     const d = daysLeft(u.deadline);

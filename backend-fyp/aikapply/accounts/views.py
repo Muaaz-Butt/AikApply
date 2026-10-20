@@ -28,8 +28,14 @@ def signup(request):
         serializer = SignupSerializer(data=data)
         if serializer.is_valid():
             user = serializer.save()
-            login(request, user) 
-            return JsonResponse({"message": "Account created successfully"}, status=201)
+            # Signing up signs the new user in (and replaces any earlier session in this browser)
+            login(request, user)
+            return JsonResponse({
+                "message": "Account created successfully",
+                "name": user.name,
+                "email": user.email,
+                "is_admin": user.is_staff,
+            }, status=201)
         return JsonResponse(serializer.errors, status=400)
     
     return JsonResponse({"error": "Only POST method allowed"}, status=405)
@@ -94,7 +100,10 @@ def signup_test(request):
     return JsonResponse({"error": "Only GET allowed"}, status=405)
 
 class LogoutAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    # Logging out must always end the server session, even if it already expired,
+    # so the frontend can call it unconditionally
+    authentication_classes = [CsrfExemptSessionAuthentication]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         logout(request)
